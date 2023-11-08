@@ -1,0 +1,6 @@
+package-as: GnomishVendorShrinker
+enable-nolib-creation: no
+
+ignore:
+  - .gitignore
+  - .pkgmeta
