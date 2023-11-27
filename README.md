@@ -16,3 +16,6 @@ Based off Tekkub's (teknologic) Gnomish Vendor Shrinker and contributions from G
 ## Installation
 Get it from one of the major addon hosting sites (curseforge, wowinterface)
 or [latest release](https://github.com/Road-block/GnomishVendorShrinker/releases/latest)
+
+
+![GVS](https://github.com/Road-block/GnomishVendorShrinker/assets/109839/fe5d06b1-eb56-468e-8cc5-eb32757a59ab)
