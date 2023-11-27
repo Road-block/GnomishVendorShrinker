@@ -3,7 +3,7 @@
 ## Title: GnomishVendorShrinker Classic
 ## Notes: Compact scrolling vendor frame
 ## Author: Gio-Flamelash, Roadblock
-## Version: 1.0.5
+## Version: 1.0.6
 ## IconTexture: Interface\Icons\INV_Misc_Toy_07
 ## X-Website:https://github.com/Road-block/GnomishVendorShrinker/releases/latest
 ## X-Curse-Project-ID: 935066

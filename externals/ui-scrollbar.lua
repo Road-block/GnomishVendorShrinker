@@ -89,16 +89,22 @@ function ns.NewScrollBar(parent, offset, step)
 	local thumb = f:GetThumbTexture()
 	thumb:SetSize(16, 24)
 	thumb:SetTexCoord(1/4, 3/4, 1/8, 7/8)
+	local ofs = f:CreateFontString(nil, "OVERLAY", "GameFontWhiteTiny")
+	local font,h = ofs:GetFont(); h = floor(h+0.5)
+	ofs:SetFont(font,h,"OUTLINE")
+	ofs:SetAllPoints(thumb)
+	f.offset = ofs
 
 	local function UpdateUpDown(self)
 		local min, max = self:GetMinMaxValues()
 		local value = self:GetValue()
 		if value == min then up:Disable() else up:Enable() end
 		if value == max then down:Disable() else down:Enable() end
+		self.offset:SetText(format("%02d",tostring(value)))
 	end
 
 	f:HookScript("OnMinMaxChanged", UpdateUpDown)
-	f:HookScript("OnValueChanged", UpdateUpDown)
+	f:SetScript("OnValueChanged", UpdateUpDown)
 
 	local border = CreateFrame("Frame", nil, f, BackdropTemplateMixin and "BackdropTemplate" or nil)
 	border:SetPoint("TOPLEFT", up, -5, 5)

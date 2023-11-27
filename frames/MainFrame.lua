@@ -47,7 +47,7 @@ function ns.NewMainFrame()
 		scrollbar:SetMinMaxValues(0, math.max(0, n_searchmatch - NUMROWS))
 		for i=row,NUMROWS do rows[i]:Hide() end
 	end
-	scrollbar:SetScript("OnValueChanged", Refresh)
+	scrollbar:HookScript("OnValueChanged", Refresh)
 
 
 	search:SetScript("OnTextChanged", Refresh)
