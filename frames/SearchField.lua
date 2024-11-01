@@ -4,9 +4,8 @@ local myname, ns = ...
 
 function ns.NewSearchField(parent)
   local editbox = ns.NewTextInput(parent)
-  editbox:SetPoint("TOPLEFT", parent, "TOPLEFT", 98, 42) -- fixed for LeilaUI
-  editbox:SetPoint("TOPLEFT", parent, "TOPLEFT", 98, 42) -- fixed for LeilaUI
-  editbox:SetWidth(56) -- added for LeilaUI
+  editbox:SetPoint("TOPLEFT", parent, "TOPLEFT", 58, 50) -- fixed for LeilaUI
+  editbox:SetWidth(100) -- added for LeilaUI
   editbox:SetHeight(32)  -- added for LeilaUI
   editbox.placeholder:SetText("Search...")
 

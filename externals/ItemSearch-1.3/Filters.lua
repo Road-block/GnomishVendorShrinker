@@ -1,5 +1,5 @@
 --[[
-Copyright 2013-2023 João Cardoso
+Copyright 2013-2024 João Cardoso
 ItemSearch is distributed under the terms of the GNU General Public License (Version 3).
 As a special exception, the copyright holders of this library give you permission to embed it
 with independent modules to produce an addon, regardless of the license terms of these
@@ -57,7 +57,7 @@ Lib.Filters.class = {
     end,
 
     match = function(self, item, _, search)
-        local class, subClass = select(6, GetItemInfo(item.link))
+        local class, subClass = select(6, C.Item.GetItemInfo(item.link))
         return Parser:Find(search, class, subClass)
     end
 }
@@ -71,7 +71,7 @@ Lib.Filters.level = {
 
     match = function(self, item, operator, num)
         local lvl = item.location and C.Item.GetCurrentItemLevel(item.location)
-                    or select(4, GetItemInfo(item.link))
+                    or select(4, C.Item.GetItemInfo(item.link))
         if lvl then
             return Parser:Compare(operator, lvl, num)
         end
@@ -86,7 +86,7 @@ Lib.Filters.requiredlevel = {
     end,
 
     match = function(self, item, operator, num)
-        local lvl = select(5, GetItemInfo(item.link))
+        local lvl = select(5, C.Item.GetItemInfo(item.link))
         if lvl then
             return Parser:Compare(operator, lvl, num)
         end
@@ -95,10 +95,10 @@ Lib.Filters.requiredlevel = {
 
 Lib.Filters.bind = {
     keywords = {
-        bop = LE_ITEM_BIND_ON_ACQUIRE,
-        boe = LE_ITEM_BIND_ON_EQUIP,
-        bou = LE_ITEM_BIND_ON_USE,
-        boq = LE_ITEM_BIND_QUEST,
+        bop = (LE_ITEM_BIND_ON_ACQUIRE or Enum.ItemBind.OnAcquire),
+        boe = (LE_ITEM_BIND_ON_EQUIP or Enum.ItemBind.OnEquip),
+        bou = (LE_ITEM_BIND_ON_USE or Enum.ItemBind.OnUse),
+        boq = (LE_ITEM_BIND_QUEST or Enum.ItemBind.Quest),
     },
     
     canSearch = function(self, operator, search)
@@ -106,7 +106,7 @@ Lib.Filters.bind = {
     end,
 
     match = function(self, item, _, target)
-        return target == select(14, GetItemInfo(item.link))
+        return target == select(14, C.Item.GetItemInfo(item.link))
     end
 }
 
@@ -147,7 +147,7 @@ if LE_EXPANSION_LEVEL_CURRENT > 0 then
         end,
 
         match = function(self, item, operator, target)
-            local expac = select(15, GetItemInfo(item.link))
+            local expac = select(15, C.Item.GetItemInfo(item.link))
             return Parser:Compare(operator, expac, target)
         end
     }
@@ -182,7 +182,7 @@ Lib.Filters.slot = {
     end,
 
     match = function(self, item, _, search)
-        local equipSlot = select(9, GetItemInfo(item.link))
+        local equipSlot = select(9, C.Item.GetItemInfo(item.link))
         return Parser:Find(search, _G[equipSlot])
     end
 }

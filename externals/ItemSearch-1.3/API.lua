@@ -1,5 +1,5 @@
 --[[
-Copyright 2013-2023 João Cardoso
+Copyright 2013-2024 João Cardoso
 ItemSearch is distributed under the terms of the GNU General Public License (Version 3).
 As a special exception, the copyright holders of this library give you permission to embed it
 with independent modules to produce an addon, regardless of the license terms of these
@@ -15,9 +15,9 @@ GNU General Public License for more details.
 This file is part of ItemSearch.
 --]]
 
-local Lib = LibStub:NewLibrary('ItemSearch-1.3', 4)
+local Lib = LibStub:NewLibrary('ItemSearch-1.3', 10)
 if Lib then
-	Lib.Unusable, Lib.Bangs = {}, {}
+	Lib.Unusable, Lib.Collected, Lib.Bangs = {}, {}, {}
 	Lib.Filters = nil
 else
 	return
@@ -33,11 +33,11 @@ local L = {
 }
 
 
---[[ Main API ]]--
+--[[ General API ]]--
 
 function Lib:Matches(item, search)
 	if type(item) == 'table' then
-    	return Parser({location = item, link = C_Item.GetItemLink(item)}, search, self.Filters)
+    	return Parser({location = item, link = C.Item.DoesItemExist(item) and C.Item.GetItemLink(item)}, search, self.Filters)
 	else
 		return Parser({link = item}, search, self.Filters)
 	end
@@ -46,7 +46,7 @@ end
 function Lib:IsUnusable(id)
     if Unfit:IsItemUnusable(id) then
         return true
-	elseif Lib.Unusable[id] == nil and IsEquippableItem(id) then
+	elseif Lib.Unusable[id] == nil and C.Item.IsEquippableItem(id) then
 		Lib.Unusable[id] = (function()
 			local lines = C.TooltipInfo.GetItemByID(id).lines
 			for i = #lines-1, 5, -1 do
@@ -61,9 +61,9 @@ function Lib:IsUnusable(id)
 end
 
 function Lib:IsQuestItem(id)
-	local _,_,_,_,_,_,_,_,_,_,_,class,_,bind = GetItemInfo(id)
+	local _,_,_,_,_,_,_,_,_,_,_,class,_,bind = C.Item.GetItemInfo(id)
 
-	if (class == Enum.ItemClass.Questitem or bind == LE_ITEM_BIND_ON_ACQUIRE) and Lib.Bangs[id] == nil then
+	if (class == Enum.ItemClass.Questitem or bind == (LE_ITEM_BIND_ON_ACQUIRE or Enum.ItemBind.OnAcquire)) and Lib.Bangs[id] == nil then
 		Lib.Bangs[id] = (function()
 			local lines = C.TooltipInfo.GetItemByID(id).lines
 			for i = 2, min(4, #lines) do
@@ -77,16 +77,31 @@ function Lib:IsQuestItem(id)
 	if Lib.Bangs[id] then
 		return true, true
 	else
-		return class == Enum.ItemClass.Questitem or bind == LE_ITEM_BIND_QUEST
+		return class == Enum.ItemClass.Questitem or bind == (LE_ITEM_BIND_QUEST or Enum.ItemBind.Quest)
 	end
 end
 
 
---[[ Equipment Sets ]]--
+--[[ Sets and Collections ]]--
 
-if IsAddOnLoaded('ItemRack') then
+if LE_EXPANSION_LEVEL_CURRENT > 2 then
+	function Lib:IsUncollected(id, link)
+		if not Lib.Collected[id] and C.Item.IsDressableItemByID(id) and not C.TransmogCollection.PlayerHasTransmog(id) then
+			local lines = C.TooltipInfo.GetHyperlink(link).lines
+			if #lines > 0 then
+				local missing = lines[#lines].leftText == TRANSMOGRIFY_TOOLTIP_APPEARANCE_UNKNOWN
+				Lib.Collected[id] = not missing
+				return missing
+			end
+		end
+	end
+else
+	Lib.IsUncollected = nop
+end
+
+if C.AddOns.IsAddOnLoaded('ItemRack') then
 	function Lib:BelongsToSet(id, search)
-		if IsEquippableItem(id) then
+		if C.Item.IsEquippableItem(id) then
 			for name, set in pairs(ItemRackUser.Sets) do
 				if name:sub(1,1) ~= '' and (not search or Parser:Find(search, name)) then
 					for _, item in pairs(set.equip) do
@@ -99,13 +114,13 @@ if IsAddOnLoaded('ItemRack') then
 		end
 	end
 
-elseif C_EquipmentSet then
+elseif LE_EXPANSION_LEVEL_CURRENT > 2 then
 	function Lib:BelongsToSet(id, search)
-		if IsEquippableItem(id) then
-			for i, setID in pairs(C_EquipmentSet.GetEquipmentSetIDs()) do
-				local name = C_EquipmentSet.GetEquipmentSetInfo(setID)
+		if C.Item.IsEquippableItem(id) then
+			for i, setID in pairs(C.EquipmentSet.GetEquipmentSetIDs()) do
+				local name = C.EquipmentSet.GetEquipmentSetInfo(setID)
 				if not search or Parser:Find(search, name) then
-					local items = C_EquipmentSet.GetItemIDs(setID)
+					local items = C.EquipmentSet.GetItemIDs(setID)
 					for _, item in pairs(items) do
 						if id == item then
 							return true
@@ -117,5 +132,5 @@ elseif C_EquipmentSet then
 	end
 
 else
-	function Lib:BelongsToSet() end
+	Lib.BelongsToSet = nop
 end
