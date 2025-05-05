@@ -6,6 +6,13 @@ local GAP = 4
 local HEIGHT = 21
 local ICONSIZE = 17
 
+local GetItemInfo = function(...)
+	if _G.GetItemInfo then
+		return _G.GetItemInfo(...)
+	elseif C_Item and C_Item.GetItemInfo then
+		return C_Item.GetItemInfo(...)
+	end
+end
 
 local function PriceIsAltCurrency(index)
 	for i=1,MAX_ITEM_COST do

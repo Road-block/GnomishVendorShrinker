@@ -1,6 +1,13 @@
 
 local myname, ns = ...
 
+local GetItemInfo = function(...)
+	if _G.GetItemInfo then
+		return _G.GetItemInfo(...)
+	elseif C_Item and C_Item.GetItemInfo then
+		return C_Item.GetItemInfo(...)
+	end
+end
 
 local function OnClick(self, button)
 	local id = self:GetParent():GetID()

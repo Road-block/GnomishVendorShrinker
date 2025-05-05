@@ -1,6 +1,22 @@
 
 local myname, ns = ...
 
+local GetItemInfo = function(...)
+	if _G.GetItemInfo then
+		return _G.GetItemInfo(...)
+	elseif C_Item and C_Item.GetItemInfo then
+		return C_Item.GetItemInfo(...)
+	end
+end
+
+local GetItemQualityColor = function(...)
+	if _G.GetItemQualityColor then
+		return _G.GetItemQualityColor(...)
+	elseif C_Item and C_Item.GetItemQualityColor then
+		return C_Item.GetItemQualityColor(...)
+	end
+end
+
 local function Knowable(link)
 	local id = ns.ids[link]
 	if not id then return false end

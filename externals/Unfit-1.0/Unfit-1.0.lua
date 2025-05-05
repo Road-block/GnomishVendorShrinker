@@ -15,9 +15,15 @@ GNU General Public License for more details.
 This file is part of Unfit.
 --]]
 
-local Lib = LibStub:NewLibrary('Unfit-1.0', 13)
+local Lib = LibStub:NewLibrary('Unfit-1.0', 14)
 if not Lib then return end
-
+local GetItemInfo = function(...)
+	if _G.GetItemInfo then
+		return _G.GetItemInfo(...)
+	elseif C_Item and C_Item.GetItemInfo then
+		return C_Item.GetItemInfo(...)
+	end
+end
 
 --[[ Data ]]--
 

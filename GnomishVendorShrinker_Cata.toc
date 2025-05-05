@@ -1,11 +1,11 @@
-## Interface: 40401
+## Interface: 40402
 
 ## Title: GnomishVendorShrinker Classic
 ## Notes: Compact scrolling vendor frame
 ## Author: Gio-Flamelash, Roadblock
-## Version: 1.0.6
+## Version: 1.0.8
 ## IconTexture: Interface\Icons\INV_Misc_Toy_07
-## X-Website:https://github.com/Road-block/GnomishVendorShrinker/releases/latest
+## X-Website: https://github.com/Road-block/GnomishVendorShrinker/releases/latest
 ## X-Curse-Project-ID: 935066
 ## X-Category: Interface Enhancements
 

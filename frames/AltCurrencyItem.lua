@@ -7,6 +7,13 @@ local icons, texts = {}, {}
 local indexes, ids = {}, {}
 local GetCurrencyInfo = C_CurrencyInfo and C_CurrencyInfo.GetCurrencyInfo
 local GetCurrencyInfoFromLink = C_CurrencyInfo and C_CurrencyInfo.GetCurrencyInfoFromLink
+local GetItemCount = function(...)
+	if _G.GetItemCount then
+		return _G.GetItemCount(...)
+	elseif C_Item and C_Item.GetItemCount then
+		return C_Item.GetItemCount(...)
+	end
+end
 
 local function OnEnter(self)
 	GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
